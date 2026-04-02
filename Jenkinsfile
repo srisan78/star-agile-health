@@ -41,7 +41,7 @@ pipeline {
     
                stage('Deploy to Kubernetes') {
     steps {
-        withCredentials([string(credentialsId: 'ec2-ip', variable: 'EC2_IP')]) {
+        withCredentials([string(credentialsId: 'ec2-ssh', variable: 'EC2_IP')]) {
             sshagent(['ec2-ssh']) {
                 sh '''
                 # Copy both files
