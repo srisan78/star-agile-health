@@ -39,15 +39,18 @@ pipeline {
             }
         }
         stage ('deploy to kubernetes') {
-            stage('Deploy') {
-            steps {
-                sh '''
-                export KUBECONFIG=$HOME/.kube/config
-                kubectl get nodes
-                kubectl apply -f deployment.yaml
-                '''
-            }
-        }
+           stage ('deploy to kubernetes') {
+               steps {
+                     sh '''
+                      export KUBECONFIG=$HOME/.kube/config
+        
+                      sed -i "s|image: .*|image: sridhar76/myapp:$BUILD_NUMBER|g" deployment.yaml
+        
+                       kubectl get nodes
+                       kubectl apply -f deployment.yaml
+                       '''
+                      }
+                 }
         }
     }
 }
