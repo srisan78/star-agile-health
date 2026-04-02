@@ -38,5 +38,11 @@ pipeline {
                 sh 'docker push sridhar76/myapp:$BUILD_NUMBER'
             }
         }
+        stage ('deploy to kubernetes') {
+            steps {
+                echo 'Deploying to Kubernetes...'
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
     }
 }
