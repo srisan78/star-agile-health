@@ -1,7 +1,7 @@
 pipeline {
     agent any
-    nvironment {
-        // This helper correctly splits the 'Username with password' credential
+    Environment {
+        
         DOCKER_CREDS = credentials('Docker_hub')
     }
     tools{
