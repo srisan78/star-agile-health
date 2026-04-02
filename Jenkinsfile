@@ -38,7 +38,7 @@ pipeline {
                 sh 'docker push sridhar76/myapp:$BUILD_NUMBER'
             }
         }
-        stage ('deploy to kubernetes') {
+    
            stage ('deploy to kubernetes') {
                steps {
                      sh '''
