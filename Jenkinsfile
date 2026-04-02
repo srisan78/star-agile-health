@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    nvironment {
+        // This helper correctly splits the 'Username with password' credential
+        DOCKER_CREDS = credentials('Docker_hub')
+    }
     tools{
         maven 'mymaven'
     }
@@ -29,9 +33,7 @@ pipeline {
         }
         stage ('push docker image') {
             steps {
-                 withCredentials([string(credentialsId: 'Docker_hub', variable: 'DOCKER_HUB_PASWD')]) {
-                    sh 'docker login -u sridhar76 -p $DOCKER_HUB_PASWD'
-            }
+                sh 'echo $DOCKER_CREDS_PSW | docker login -u $DOCKER_CREDS_USR --password-stdin'
              sh 'docker tag myapp:$BUILD_NUMBER sridhar76/myapp:$BUILD_NUMBER'
                 sh 'docker push sridhar76/myapp:$BUILD_NUMBER'
             }
