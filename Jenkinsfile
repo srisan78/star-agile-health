@@ -39,10 +39,15 @@ pipeline {
             }
         }
         stage ('deploy to kubernetes') {
+            stage('Deploy') {
             steps {
-                echo 'Deploying to Kubernetes...'
-                sh 'kubectl apply -f deployment.yaml'
+                sh '''
+                export KUBECONFIG=$HOME/.kube/config
+                kubectl get nodes
+                kubectl apply -f deployment.yaml
+                '''
             }
+        }
         }
     }
 }
