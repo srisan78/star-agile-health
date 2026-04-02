@@ -39,17 +39,26 @@ pipeline {
             }
         }
     
-           stage ('deploy to kubernetes') {
-               steps {
-                     sh '''
-                      export KUBECONFIG=$HOME/.kube/config
-        
-                      sed -i "s|image: .*|image: sridhar76/myapp:$BUILD_NUMBER|g" deployment.yaml
-        
-                       kubectl get nodes
-                       kubectl apply -f deployment.yaml
-                       '''
-                      }
-                 }
+           stage('Deploy to Kubernetes') {
+    steps {
+        sshagent(['ec2-ssh']) {
+            sh '''
+            # Copy deployment.yaml from Jenkins to EC2
+            scp -o StrictHostKeyChecking=no deployment.yaml ubuntu@18.215.178.68:/home/ubuntu/
+
+            # Run deployment on EC2
+            ssh -o StrictHostKeyChecking=no ubuntu@18.215.178.68 "
+
+            # Update image dynamically
+            sed -i 's|image: .*|image: sridhar76/myapp:$BUILD_NUMBER|g' deployment.yaml
+
+            kubectl get nodes
+            kubectl apply -f deployment.yaml
+
+            "
+            '''
+        }
+    }
+}
         }
     }
